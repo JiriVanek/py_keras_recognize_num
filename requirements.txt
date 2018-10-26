@@ -11,7 +11,8 @@ scikit-learn>=0.19.1
 scipy>=1.0.0
 six>=1.10.0
 tensorboard>=1.7.0
-
+tensorflow>=1.10
+keras>=0.1
 termcolor>=1.1.0
 Werkzeug>=0.14.1
 

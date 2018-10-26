@@ -26,7 +26,11 @@ class ImageKerasClassifier:
         self.model_dir = './model'
         self.model_name = 'MNIS'
         self.results = None
-
+        # self.x_train = None
+        # self.y_train = None
+        # self.x_Test = None
+        # self.y_Test = None
+        self.num_classes =None
 
 
     def set_model_dir(self, path):
@@ -48,7 +52,7 @@ class ImageKerasClassifier:
         return os.path.abspath('{}/{}'.format(self.get_model_dir(), self.model_name))
 
     # define the keras model
-    def keras_model(self, num_classes):
+    def keras_model(self):
         # create model
         model = Sequential()
         model.add(Conv2D(30, (5, 5), input_shape=(1, 28, 28), activation='relu'))
@@ -59,11 +63,29 @@ class ImageKerasClassifier:
         model.add(Flatten())
         model.add(Dense(128, activation='relu'))
         model.add(Dense(50, activation='relu'))
-        model.add(Dense(num_classes, activation='softmax'))
+        model.add(Dense(self.num_classes, activation='softmax'))
         # Compile model
         model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
         return model
 
+    def load_data(self):
+        (x_train, y_train), (x_test, y_test) = mnist.load_data()
+        # reshape to be [samples][pixels][width][height]
+        x_train = x_train.reshape(x_train.shape[0], 1, 28, 28).astype('float32')
+        x_test = x_test.reshape(x_test.shape[0], 1, 28, 28).astype('float32')
+        # normalize inputs from 0-255 to 0-1
+        self.x_train = x_train / 255
+        self.x_test = x_test / 255
+        # one hot encode outputs
+        self.y_train = np_utils.to_categorical(y_train)
+        self.y_test = np_utils.to_categorical(y_test)
+        self.num_classes = y_test.shape[1]
+
+    def fit(self, epoch, batch):
+        self.model.fit(self.x_train, self.y_train, validation_data=(self.x_test, self.y_test), epochs=epoch, batch_size=batch)
+
+    def eval(self):
+        return self.model.evaluate(self.x_test, self.y_test, verbose=0)
 
     def print_results(self):
         # print results
