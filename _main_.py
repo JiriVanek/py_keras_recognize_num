@@ -12,31 +12,31 @@ from keras.utils import np_utils
 K.set_image_dim_ordering('th')
 
 if 'tensorflow' == K.backend():
-	import tensorflow as tf
-	from keras.backend.tensorflow_backend import set_session
-	config = tf.ConfigProto()
-	config.gpu_options.allow_growth = True
-	config.gpu_options.visible_device_list = "0"
-	set_session(tf.Session(config=config))
+    import tensorflow as tf
+    from keras.backend.tensorflow_backend import set_session
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+    config.gpu_options.visible_device_list = "0"
+    set_session(tf.Session(config=config))
 
 
 # define the keras model
 def keras_model():
-	# create model
-	model = Sequential()
-	model.add(Conv2D(60, (5, 5), input_shape=(1, 28, 28), activation='relu'))
-	model.add(MaxPooling2D(pool_size=(2, 2)))
-	model.add(Conv2D(15, (3, 3), activation='relu'))
-	model.add(MaxPooling2D(pool_size=(2, 2)))
-	model.add(Dropout(0.2))
-	model.add(Flatten())
-	model.add(Dense(128, activation='relu'))
-	model.add(Dropout(0.15))
-	model.add(Dense(64, activation='relu'))
-	model.add(Dense(num_classes, activation='softmax'))
-	# Compile model
-	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	return model
+    # create model
+    network = Sequential()
+    network.add(Conv2D(60, (5, 5), input_shape=(1, 28, 28), activation='relu'))
+    network.add(MaxPooling2D(pool_size=(2, 2)))
+    network.add(Conv2D(15, (3, 3), activation='relu'))
+    network.add(MaxPooling2D(pool_size=(2, 2)))
+    network.add(Dropout(0.2))
+    network.add(Flatten())
+    network.add(Dense(128, activation='relu'))
+    network.add(Dropout(0.15))
+    network.add(Dense(64, activation='relu'))
+    network.add(Dense(num_classes, activation='softmax'))
+    # Compile model
+    network.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return network
 
 
 # fix random seed for reproducibility
