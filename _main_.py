@@ -1,5 +1,6 @@
 import numpy
 from keras import backend as K
+import keras
 from keras.datasets import mnist
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -42,6 +43,7 @@ def keras_model():
 # fix random seed for reproducibility
 seed = 7
 numpy.random.seed(seed)
+tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
 # load data
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
 # reshape to be [samples][pixels][width][height]
@@ -58,7 +60,7 @@ num_classes = y_test.shape[1]
 # build the model
 model = keras_model()
 # Fit the model
-model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=15, batch_size=200)
+model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=15, batch_size=200,callbacks=[tbCallBack])
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
 print("Large CNN Error: %.2f%%" % (100-scores[1]*100))
