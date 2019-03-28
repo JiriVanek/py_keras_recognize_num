@@ -42,6 +42,24 @@ def keras_model():
     network.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     return network
 
+def tutorial_model():
+    model = Sequential()
+    model.add(Conv2D(32, kernel_size=(3, 3),
+                     activation='relu',
+                     input_shape=(1, 28, 28)))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    model.add(Flatten())
+    model.add(Dense(128, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(num_classes, activation='softmax'))
+
+    model.compile(loss=keras.losses.categorical_crossentropy,
+                  optimizer=keras.optimizers.Adadelta(),
+                  metrics=['accuracy'])
+    return model
+
 allruns=0;
 allscore=0;
 for x in range(1, 51):
@@ -65,6 +83,7 @@ for x in range(1, 51):
     start = time.time()
     # build the model
     model = keras_model()
+    # model = tutorial_model()
     # Fit the model
     model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=15, batch_size=200,callbacks=[tbCallBack])
     # Final evaluation of the model
